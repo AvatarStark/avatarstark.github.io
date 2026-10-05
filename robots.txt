@@ -1,0 +1,4 @@
+User-Agent: *
+Allow: /
+
+Sitemap: https://avatarstark.github.io/sitemap.xml
