@@ -1,4 +1,7 @@
 User-Agent: *
 Allow: /
+Disallow: /admin/
+Disallow: /book-demo/gestionar/
+Disallow: /server/
 
 Sitemap: https://avatarstark.github.io/sitemap.xml

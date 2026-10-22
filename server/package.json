@@ -1,0 +1,29 @@
+{
+  "name": "nexopos-web-server",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Backend de la web comercial de NexoPOS: prospectos, reservas de demostraciones y panel comercial",
+  "type": "module",
+  "main": "src/index.js",
+  "engines": {
+    "node": ">=22.9"
+  },
+  "scripts": {
+    "start": "node --env-file-if-exists=.env src/index.js",
+    "dev": "node --env-file-if-exists=.env --watch src/index.js",
+    "migrate": "node --env-file-if-exists=.env scripts/migrate.mjs",
+    "admin:create": "node --env-file-if-exists=.env scripts/create-admin.mjs",
+    "test": "node --test --test-concurrency=1 test/*.test.mjs",
+    "test:e2e": "playwright test -c test/e2e/playwright.config.mjs"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
+    "pg": "^8.13.1"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.10.2",
+    "@playwright/test": "1.56.1"
+  }
+}
