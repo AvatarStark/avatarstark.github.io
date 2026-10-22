@@ -11,7 +11,7 @@ async function login(page, { username = ADMIN.username, password = ADMIN.passwor
 
 test('rutas protegidas: sin sesión no hay datos', async ({ page, request }) => {
   for (const [m, p] of [['get', '/api/admin/leads'], ['get', '/api/admin/metrics'], ['get', '/api/admin/leads/1'], ['patch', '/api/admin/leads/1'], ['put', '/api/admin/settings/availability'], ['get', '/api/admin/bookings']]) {
-    const r = await request[m](p, { data: {} });
+    const r = await request[m](p, m === 'get' ? {} : { data: {} });
     expect(r.status(), `${m} ${p}`).toBe(401);
   }
   await page.goto('/admin/#prospectos');

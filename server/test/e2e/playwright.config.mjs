@@ -18,13 +18,15 @@ export default defineConfig({
     { name: 'movil', use: { ...devices['Pixel 7'] }, testMatch: /responsive|funnel-mobile/ },
   ],
   webServer: {
-    command: 'node src/index.js',
+    // E2E_SERVER_CMD permite probar otro arranque, por ejemplo la Edge Function con Deno.
+    command: process.env.E2E_SERVER_CMD || 'node src/index.js',
     cwd: '../..',
     url: `${BASE}/api/health`,
     reuseExistingServer: false,
     env: {
       PORT: String(PORT), DATABASE_URL: DB, ADMIN_JWT_SECRET: 'e2e'.repeat(16), SERVE_STATIC: '1',
-      PUBLIC_SITE_URL: BASE, RATE_LIMIT_SCALE: '50', NODE_ENV: 'test',
+      PUBLIC_SITE_URL: BASE, RATE_LIMIT_SCALE: '50', NODE_ENV: 'test', EDGE_PORT: String(PORT),
+      ...(process.env.E2E_SERVER_CMD ? { SITE_ROOT: '../', RATE_LIMIT_STORE: 'db' } : {}),
     },
   },
 });

@@ -14,7 +14,7 @@ export { pool, query, resetRateLimits };
 export async function resetDb() {
   await query('DROP SCHEMA public CASCADE; CREATE SCHEMA public;');
   await migrate(() => {});
-  resetRateLimits();
+  await resetRateLimits();
 }
 
 export async function startServer() {

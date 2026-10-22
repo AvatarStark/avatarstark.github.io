@@ -1,11 +1,13 @@
 import path from 'node:path';
+import process from 'node:process';
 import { fileURLToPath } from 'node:url';
 import express from 'express';
 import { config } from './config.js';
 import { adminRouter } from './routes/admin.js';
 import { publicRouter } from './routes/public.js';
 
-const siteRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
+// SITE_ROOT permite servir la web cuando el código se ejecuta desde otra carpeta (Edge Function).
+const siteRoot = process.env.SITE_ROOT ? path.resolve(process.env.SITE_ROOT) : path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 // Solo se publican las partes de la web; nunca el código del servidor ni archivos ocultos.
 const STATIC_DIRS = ['assets', 'book-demo', 'admin', 'privacidad'];
 const STATIC_FILES = ['index.html', '404.html', 'robots.txt', 'sitemap.xml'];

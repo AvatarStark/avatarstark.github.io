@@ -12,7 +12,7 @@ beforeEach(async () => {
   await createAdmin();
   adminToken = (await api(base, 'POST', '/api/admin/login', { username: 'ana', password: 'clave-segura-123' })).body.token;
   await api(base, 'PUT', '/api/admin/settings/availability', { value: OPEN_AVAILABILITY }, adminToken);
-  resetRateLimits();
+  await resetRateLimits();
 });
 
 const newLead = async (over = {}) => api(base, 'POST', '/api/leads', { ...LEAD, ...over });
