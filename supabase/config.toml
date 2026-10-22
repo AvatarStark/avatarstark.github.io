@@ -4,3 +4,5 @@ project_id = "nexopos-web"
 [functions.api]
 # La función es pública: el panel usa su propio token (ADMIN_JWT_SECRET), no el JWT de Supabase.
 verify_jwt = false
+entrypoint = "./functions/api/index.js"
+import_map = "./functions/api/deno.json"
