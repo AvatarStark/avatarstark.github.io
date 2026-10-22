@@ -14,7 +14,9 @@
     "migrate": "node --env-file-if-exists=.env scripts/migrate.mjs",
     "admin:create": "node --env-file-if-exists=.env scripts/create-admin.mjs",
     "test": "node --test --test-concurrency=1 test/*.test.mjs",
-    "test:e2e": "playwright test -c test/e2e/playwright.config.mjs"
+    "test:e2e": "playwright test -c test/e2e/playwright.config.mjs",
+    "edge:build": "node scripts/build-edge.mjs",
+    "assets:stamp": "node scripts/stamp-assets.mjs"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

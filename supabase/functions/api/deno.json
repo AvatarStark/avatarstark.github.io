@@ -1,0 +1,8 @@
+{
+  "imports": {
+    "express": "npm:express@4.21.2",
+    "pg": "npm:pg@8.13.1",
+    "bcryptjs": "npm:bcryptjs@2.4.3",
+    "jsonwebtoken": "npm:jsonwebtoken@9.0.2"
+  }
+}

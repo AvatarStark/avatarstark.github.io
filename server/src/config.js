@@ -1,15 +1,21 @@
+import process from 'node:process';
+
 const env = process.env;
 const list = (v) => (v || '').split(',').map((s) => s.trim()).filter(Boolean);
 
 export const config = {
   port: Number(env.PORT || 8787),
   production: env.NODE_ENV === 'production',
-  trustProxy: Number(env.TRUST_PROXY || 0),
+  // Número de proxies delante, o 'true' para confiar en X-Forwarded-For (Supabase Edge Functions).
+  trustProxy: env.TRUST_PROXY === 'true' ? true : Number(env.TRUST_PROXY || 0),
   allowedOrigins: list(env.ALLOWED_ORIGINS),
   publicSiteUrl: (env.PUBLIC_SITE_URL || 'http://localhost:8787').replace(/\/$/, ''),
   serveStatic: env.SERVE_STATIC === '1',
-  databaseUrl: env.DATABASE_URL,
-  databaseSsl: env.DATABASE_SSL === '1',
+  // En Supabase Edge Functions la conexión llega en SUPABASE_DB_URL.
+  databaseUrl: env.DATABASE_URL || env.SUPABASE_DB_URL,
+  databaseSsl: env.DATABASE_SSL === '1' || (!env.DATABASE_URL && !!env.SUPABASE_DB_URL),
+  // 'db' guarda los límites por IP en PostgreSQL (necesario con varias instancias o Edge Functions).
+  rateLimitStore: env.RATE_LIMIT_STORE === 'db' || (!env.DATABASE_URL && !!env.SUPABASE_DB_URL) ? 'db' : 'memory',
   jwtSecret: env.ADMIN_JWT_SECRET || '',
   turnstileSecret: env.TURNSTILE_SECRET || '',
   resendKey: env.RESEND_API_KEY || '',
