@@ -98,6 +98,22 @@ Las pruebas borran y recrean el esquema de la base indicada en `TEST_DATABASE_UR
 
 Mientras `apiBase` no apunte a un backend desplegado, la web en GitHub Pages muestra el embudo pero, al enviar los datos, ofrece continuar por WhatsApp en lugar de reservar.
 
+## Despliegue actual (Supabase)
+
+- **Proyecto:** `svrvfhspdcgkdrmxizku` (us-east-1). La API es la Edge Function `api`: `https://svrvfhspdcgkdrmxizku.supabase.co/functions/v1/api/...`
+- **Base de datos:** PostgreSQL de Supabase con las migraciones de `server/migrations`. RLS está activo en todas las tablas y sin permisos para `anon`/`authenticated`, así que la API REST pública de Supabase no expone datos.
+- **Secretos de la función:** `ADMIN_JWT_SECRET`, `ALLOWED_ORIGINS`, `PUBLIC_SITE_URL`, `TRUST_PROXY=true`, `RATE_LIMIT_STORE=db` y `NODE_ENV=production`. Se gestionan en Dashboard → Edge Functions → Secrets o con `supabase secrets set`. `SUPABASE_DB_URL` la pone Supabase.
+- **Web:** `assets/js/config.js` usa esa API cuando la página se abre desde `avatarstark.github.io`; en local usa el mismo servidor.
+
+Para volver a desplegar la API después de cambiar `server/src`:
+
+```bash
+cd server && npm run edge:build && cd ..
+SUPABASE_ACCESS_TOKEN=sbp_… npx supabase@2.20.12 functions deploy api --project-ref svrvfhspdcgkdrmxizku --no-verify-jwt --use-api
+```
+
+Para una migración nueva, ejecuta el SQL en Dashboard → SQL Editor y añade su nombre a `schema_migrations`. Si cambias CSS o JS, ejecuta antes `npm run assets:stamp` (en `server/`).
+
 ## Contenido
 
 - `assets/capturas/`: capturas reales de NexoPOS 1.5 con datos de demostración (WebP 960/1600/2400 px).
