@@ -60,3 +60,8 @@ test('validación de prospectos', () => {
   const { errors } = validateLead({ businessType: 'nave', needs: [], employees: 'x', timeline: 'y', name: 'A', businessName: '', whatsapp: '1', email: 'no', timezone: 'Nada', consent: false });
   assert.deepEqual(Object.keys(errors).sort(), ['businessName', 'businessType', 'consent', 'email', 'employees', 'name', 'needs', 'timeline', 'timezone', 'whatsapp']);
 });
+
+test('las huellas de caché de CSS/JS están al día (npm run assets:stamp)', async () => {
+  const { stamp } = await import('../scripts/stamp-assets.mjs');
+  assert.deepEqual(await stamp({ write: false }), []);
+});
