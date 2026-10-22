@@ -125,7 +125,8 @@ button { font: inherit; color: inherit; }
   box-shadow: 0 0 0 1px rgba(255, 255, 255, .08), 0 60px 120px -30px rgba(0, 0, 0, .7), 0 30px 60px -30px rgba(42, 125, 225, .5);
 }
 .device img { border-radius: 16px; width: 100%; height: auto; }
-.hero-stage .device { transform: perspective(1800px) rotateX(10deg); transform-origin: 50% 100%; }
+.hero-stage .device { transform: perspective(1800px) rotateX(var(--tilt, 10deg)) scale(var(--lift, 1)); transform-origin: 50% 100%; will-change: transform; }
+.hero-stage .float, .hero-stage .phone { translate: 0 var(--py, 0); }
 
 .float {
   position: absolute; display: flex; align-items: center; gap: 12px; padding: 14px 18px; border-radius: 20px;
@@ -249,7 +250,7 @@ button { font: inherit; color: inherit; }
 /* ---------- Problemas ---------- */
 .pains { list-style: none; margin: 60px 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
 .pain { padding: 28px; border-radius: var(--radius-l); background: var(--white); box-shadow: 0 1px 0 rgba(1, 30, 65, .06), 0 18px 40px -28px rgba(1, 30, 65, .35); display: flex; flex-direction: column; transition: transform .35s var(--ease), box-shadow .35s; }
-.pain:hover { transform: translateY(-4px); box-shadow: 0 1px 0 rgba(1, 30, 65, .06), 0 26px 50px -28px rgba(1, 30, 65, .45); }
+.pain:hover { box-shadow: 0 1px 0 rgba(1, 30, 65, .06), 0 26px 50px -28px rgba(1, 30, 65, .45); }
 .pain-ico { width: 48px; height: 48px; border-radius: 14px; display: grid; place-items: center; background: #e8f0fd; color: var(--blue-deep); margin-bottom: 18px; }
 .pain-ico svg { width: 24px; height: 24px; }
 .pain h3 { margin: 0; font-size: 21px; letter-spacing: -0.02em; color: var(--text); }
@@ -359,16 +360,82 @@ button { font: inherit; color: inherit; }
 .foot-links { display: flex; gap: 22px; flex-wrap: wrap; }
 .foot-links a { font-weight: 600; }
 
+/* ---------- 1. Esqueletos de carga ---------- */
+@keyframes shimmer-x { to { background-position: -200% 0; } }
+.sk, .sk-block {
+  background: linear-gradient(100deg, rgba(150, 170, 200, .14) 30%, rgba(150, 170, 200, .32) 50%, rgba(150, 170, 200, .14) 70%) 0 0 / 200% 100%;
+  animation: shimmer-x 1.3s linear infinite;
+}
+.light .sk, .admin-page .sk-block, .fcard .sk-block { background-image: linear-gradient(100deg, #e9eef6 30%, #f6f8fc 50%, #e9eef6 70%); }
+.sk-in { animation: skIn .6s var(--ease); }
+@keyframes skIn { from { opacity: 0; filter: blur(6px); } to { opacity: 1; filter: none; } }
+.sk-block { display: block; border-radius: 12px; }
+.sk-line { height: 14px; margin: 8px 0; }
+.sk-title { height: 28px; width: 40%; margin-bottom: 18px; }
+
+/* ---------- 2. Microinteracciones ---------- */
+.btn, .tab, .tour-tab, .opt, .cal-time, .cal-day, .player-btn, .fback { position: relative; overflow: hidden; isolation: isolate; }
+.chip > span { position: relative; overflow: hidden; isolation: isolate; }
+.ripple { position: absolute; border-radius: 50%; background: currentColor; opacity: .22; transform: scale(0); pointer-events: none; animation: ripple .6s var(--ease) forwards; z-index: -1; }
+@keyframes ripple { to { transform: scale(1); opacity: 0; } }
+.btn:active, .tab:active, .cal-time:active, .cal-day:active:not(:disabled), .chip:active > span, .player-btn:active { scale: .97; }
+.btn, .tab, .cal-time, .cal-day, .chip > span, .player-btn { transition-property: transform, scale, background-color, box-shadow, color; }
+.btn-primary::before, .btn-green::before { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, .55) 50%, transparent 70%) -150% 0 / 200% 100% no-repeat; transition: background-position .8s var(--ease); }
+.btn-primary:hover::before, .btn-green:hover::before { background-position: 150% 0; }
+.nav-links a { position: relative; }
+.nav-links a::after { content: ""; position: absolute; left: 16px; right: 16px; bottom: 6px; height: 2px; border-radius: 2px; background: var(--green); transform: scaleX(0); transform-origin: left; transition: transform .3s var(--ease); }
+.nav-links a:hover::after { transform: scaleX(1); }
+.faq summary { transition: color .2s; }
+.faq summary:hover { color: var(--green); }
+.faq details[open] p { animation: faqIn .35s var(--ease); }
+@keyframes faqIn { from { opacity: 0; translate: 0 -6px; } to { opacity: 1; translate: none; } }
+
+/* ---------- 3. Animaciones al hacer scroll ---------- */
+.steps[data-steps-progress] { --p: 0; }
+.step .step-n { transition: background-color .4s, box-shadow .4s, transform .5s var(--ease); background: rgba(255, 255, 255, .1); }
+.step.on .step-n { background: var(--grad); box-shadow: 0 0 0 6px rgba(0, 206, 124, .14); transform: scale(1.06); }
+.step { transition: box-shadow .4s, background-color .4s; }
+.step.on { background: rgba(255, 255, 255, .08); box-shadow: inset 0 0 0 1px rgba(0, 206, 124, .35); }
+.js .steps[data-steps-progress] .step:not(.on) .step-n { background: rgba(255, 255, 255, .1); }
+
+/* ---------- 4. Tarjetas que reaccionan ---------- */
+.tilt { position: relative; transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); transform-style: preserve-3d; transition: transform .5s var(--ease), box-shadow .35s, background-color .35s; }
+.tilt.tilting { transition: transform .12s linear, box-shadow .35s, background-color .35s; }
+.tilt::after { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; opacity: 0; transition: opacity .35s; background: radial-gradient(260px circle at var(--mx, 50%) var(--my, 50%), rgba(255, 255, 255, .16), transparent 60%); }
+.light .tilt::after, .tilt.opt::after, .admin-page .tilt::after { background: radial-gradient(260px circle at var(--mx, 50%) var(--my, 50%), rgba(42, 125, 225, .12), transparent 60%); }
+.tilt.tilting::after { opacity: 1; }
+.tilt:active { scale: .985; }
+.pain.tilting, .trust li.tilting { box-shadow: 0 1px 0 rgba(1, 30, 65, .06), 0 30px 60px -30px rgba(1, 30, 65, .5); }
+.step.tilting, .facts li.tilting, .mods li.tilting { background: rgba(255, 255, 255, .09); }
+.mods-light li.tilting { background: var(--white); box-shadow: 0 0 0 1px rgba(42, 125, 225, .35), 0 20px 40px -24px rgba(1, 30, 65, .35); }
+.pain-ico, .trust-ico, .step-n { transition: transform .45s var(--ease); }
+.tilting .pain-ico, .tilting .trust-ico { transform: translateZ(30px) scale(1.08) rotate(-4deg); }
+.tour-stage.tilt::after { border-radius: var(--radius-xl); }
+
+/* ---------- 5. Indicadores de progreso ---------- */
+.scroll-progress { position: fixed; inset: 0 0 auto 0; height: 3px; z-index: 60; pointer-events: none; }
+.scroll-progress i { display: block; height: 100%; background: var(--grad); transform: scaleX(0); transform-origin: left; box-shadow: 0 0 12px rgba(0, 206, 124, .6); }
+@media (min-width: 981px) {
+  .steps[data-steps-progress]::before, .steps[data-steps-progress]::after { content: ""; position: absolute; left: 12.5%; right: 12.5%; top: 47px; height: 3px; border-radius: 3px; }
+  .steps[data-steps-progress] { position: relative; }
+  .steps[data-steps-progress]::before { background: rgba(255, 255, 255, .1); }
+  .steps[data-steps-progress]::after { background: var(--grad); transform: scaleX(var(--p)); transform-origin: left; }
+  .steps[data-steps-progress] .step { z-index: 1; }
+  .steps[data-steps-progress] .step-n { position: relative; z-index: 1; }
+}
+
 /* ---------- Animaciones al desplazarse ---------- */
-.js .reveal { opacity: 0; transform: translateY(40px); transition: opacity .9s var(--ease), transform .9s var(--ease); }
-.js .reveal.in { opacity: 1; transform: none; }
+.js .reveal { opacity: 0; translate: 0 40px; transition: opacity .9s var(--ease), translate .9s var(--ease); transition-delay: calc(var(--i, 0) * 70ms); }
+.js .reveal.in { opacity: 1; translate: none; }
+.js .reveal-scale { scale: .94; transition: opacity .9s var(--ease), translate .9s var(--ease), scale .9s var(--ease); }
+.js .reveal-scale.in { scale: none; }
 .js .reveal.d1 { transition-delay: .08s; }
 .js .reveal.d2 { transition-delay: .16s; }
 .js .reveal.d3 { transition-delay: .24s; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
-  .js .reveal { opacity: 1; transform: none; }
+  .js .reveal { opacity: 1; translate: none; scale: none; }
 }
 
 /* ---------- Responsive ---------- */
@@ -402,6 +469,7 @@ button { font: inherit; color: inherit; }
   .hero { padding-top: 120px; }
   .hero-stage { margin-top: 48px; }
   .hero-stage .device { transform: none; padding: 6px; border-radius: 16px; }
+  .hero-stage .float, .hero-stage .phone { translate: none; }
   .device img { border-radius: 11px; }
   .float { padding: 10px 12px; border-radius: 14px; font-size: 12px; gap: 8px; }
   .float b { font-size: 14px; }

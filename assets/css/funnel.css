@@ -43,7 +43,7 @@
 .options-list { display: grid; gap: 10px; }
 .opt { position: relative; display: flex; align-items: center; gap: 14px; padding: 18px; border-radius: var(--radius-m); background: var(--white); box-shadow: inset 0 0 0 1.5px #d9e1ec; cursor: pointer; transition: box-shadow .2s, background-color .2s, transform .2s var(--ease); }
 .options-cards .opt { flex-direction: column; align-items: flex-start; min-height: 150px; }
-.opt:hover { box-shadow: inset 0 0 0 1.5px #9db8e4; transform: translateY(-1px); }
+.opt:hover { box-shadow: inset 0 0 0 1.5px #9db8e4; }
 .opt input { position: absolute; opacity: 0; width: 1px; height: 1px; }
 .opt-ico { width: 46px; height: 46px; border-radius: 14px; display: grid; place-items: center; background: #eaf1fd; color: var(--blue-deep); transition: background-color .2s, color .2s; }
 .opt-ico svg { width: 24px; height: 24px; }
@@ -59,9 +59,9 @@
 .options-chips { display: flex; flex-wrap: wrap; gap: 10px; }
 .chip { position: relative; cursor: pointer; }
 .chip input { position: absolute; opacity: 0; width: 1px; height: 1px; }
-.chip span { display: inline-flex; align-items: center; gap: 8px; height: 48px; padding: 0 18px; border-radius: 999px; box-shadow: inset 0 0 0 1.5px #d9e1ec; font-weight: 600; font-size: 15.5px; transition: box-shadow .2s, background-color .2s, color .2s; }
-.chip span::before { content: ""; width: 18px; height: 18px; border-radius: 6px; box-shadow: inset 0 0 0 2px #b8c5d8; transition: background-color .2s, box-shadow .2s; }
-.chip:hover span { box-shadow: inset 0 0 0 1.5px #9db8e4; }
+.chip > span { display: inline-flex; align-items: center; gap: 8px; height: 48px; padding: 0 18px; border-radius: 999px; box-shadow: inset 0 0 0 1.5px #d9e1ec; font-weight: 600; font-size: 15.5px; transition: box-shadow .2s, background-color .2s, color .2s; }
+.chip > span::before { content: ""; width: 18px; height: 18px; border-radius: 6px; box-shadow: inset 0 0 0 2px #b8c5d8; transition: background-color .2s, box-shadow .2s; }
+.chip:hover > span { box-shadow: inset 0 0 0 1.5px #9db8e4; }
 .chip input:checked + span { background: #f1f6ff; box-shadow: inset 0 0 0 2px var(--blue-deep); color: var(--navy); }
 .chip input:checked + span::before { background: var(--blue-deep) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E") center / 12px no-repeat; box-shadow: none; }
 .chip input:focus-visible + span { outline: 3px solid var(--green); outline-offset: 2px; }
@@ -109,8 +109,8 @@
 .cal-nav:hover:not(:disabled) { background: #e3e9f3; }
 .cal-nav:disabled { opacity: .35; cursor: default; }
 .cal-days { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin-top: 12px; }
-.cal-day { display: grid; justify-items: center; gap: 2px; padding: 10px 2px; border: 0; border-radius: 14px; background: var(--paper); cursor: pointer; color: var(--text); transition: background-color .2s, color .2s, transform .2s var(--ease); }
-.cal-day:hover:not(:disabled) { background: #e3e9f3; transform: translateY(-1px); }
+.cal-day { transition: translate .25s var(--ease), background-color .2s, color .2s; display: grid; justify-items: center; gap: 2px; padding: 10px 2px; border: 0; border-radius: 14px; background: var(--paper); cursor: pointer; color: var(--text); }
+.cal-day:hover:not(:disabled) { background: #e3e9f3; translate: 0 -2px; }
 .cal-day:disabled { background: transparent; color: #a5b1c2; cursor: default; }
 .cal-day[aria-pressed="true"] { background: var(--navy); color: var(--white); }
 .cal-dow { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; opacity: .75; }
@@ -198,3 +198,50 @@
 .legal p, .legal li { color: #3d4d63; font-size: 16px; }
 .legal ul { padding-left: 20px; display: grid; gap: 8px; }
 .legal a { color: var(--blue-deep); font-weight: 700; text-decoration: underline; }
+
+/* ---------- Microinteracciones del embudo ---------- */
+.opt:has(input:checked) .opt-ico { animation: icoPop .45s var(--ease); }
+@keyframes icoPop { 0% { transform: scale(1); } 40% { transform: scale(1.18) rotate(-6deg); } 100% { transform: scale(1); } }
+.chip input:checked + span::before { animation: checkPop .35s var(--ease); }
+@keyframes checkPop { 0% { transform: scale(.4); } 70% { transform: scale(1.2); } 100% { transform: scale(1); } }
+.opt-row:has(input:checked)::before { animation: checkPop .35s var(--ease); }
+.field input, .field select { transition: box-shadow .2s, background-color .2s; }
+.field:focus-within > label { color: var(--blue-deep); }
+.field input[aria-invalid="true"] { animation: shake .4s var(--ease); }
+@keyframes shake { 20%, 60% { translate: -5px 0; } 40%, 80% { translate: 5px 0; } }
+.ferror:not([hidden]) { animation: faqIn .3s var(--ease); }
+.cal-time[aria-pressed="true"] { animation: checkPop .3s var(--ease); }
+.fdone-ico svg path { stroke-dasharray: 30; stroke-dashoffset: 30; animation: draw .5s .25s var(--ease) forwards; }
+@keyframes draw { to { stroke-dashoffset: 0; } }
+.fdone-ico { box-shadow: 0 0 0 0 rgba(0, 206, 124, .5); animation: pop .5s var(--ease), halo 1.6s .4s var(--ease) 2; }
+@keyframes halo { to { box-shadow: 0 0 0 18px rgba(0, 206, 124, 0); } }
+[data-copied]:not([hidden]) { display: inline-block; animation: checkPop .35s var(--ease); }
+
+/* ---------- Indicador de pasos del embudo ---------- */
+.fsteps { list-style: none; margin: 14px 0 0; padding: 0; display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; }
+.fsteps li { display: grid; justify-items: center; gap: 6px; font-size: 12px; font-weight: 700; color: var(--muted); text-align: center; }
+.fsteps .done { color: #3d4d63; }
+.fsteps i { width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; font-style: normal; font-size: 12px; background: #eef2f8; color: #4a5a70; transition: background-color .35s, color .35s, box-shadow .35s, transform .35s var(--ease); }
+.fsteps .done i { background: var(--green); color: var(--navy); }
+.fsteps .done i::before { content: "✓"; font-weight: 900; }
+.fsteps .done i span { display: none; }
+.fsteps .current { color: var(--text); }
+.fsteps .current i { background: var(--blue-deep); color: var(--white); box-shadow: 0 0 0 5px rgba(42, 125, 225, .18); transform: scale(1.1); }
+.fprogress-bar i { position: relative; overflow: hidden; }
+.fprogress-bar i::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .55), transparent); transform: translateX(-100%); animation: barShine 2.2s ease-in-out infinite; }
+@keyframes barShine { 60%, 100% { transform: translateX(100%); } }
+@media (max-width: 600px) {
+  .fsteps li { font-size: 0; }
+  .fsteps li.current { font-size: 11px; }
+  .fsteps i { width: 22px; height: 22px; font-size: 11px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fdone-ico svg path { stroke-dashoffset: 0; }
+}
+
+/* Esqueleto del calendario con la forma real (días + horas) */
+.cal-sk-days { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin-top: 18px; }
+.cal-sk-days i { height: 74px; border-radius: 14px; }
+.cal-sk > b { display: block; height: 18px; width: 45%; margin-top: 22px; border-radius: 8px; }
+.cal-sk i, .cal-sk > b { background: linear-gradient(100deg, #eef2f8 30%, #f7f9fc 50%, #eef2f8 70%) 0 0 / 200% 100%; animation: shimmer-x 1.2s linear infinite; }
+.cal-skeleton { grid-template-columns: repeat(auto-fill, minmax(112px, 1fr)); }

@@ -158,6 +158,7 @@
     progressLabel.textContent = `Paso ${i + 1} de ${STEPS.length}`;
     progressFill.style.transform = `scaleX(${(i + 1) / STEPS.length})`;
     progressBar.setAttribute('aria-valuenow', String(i + 1));
+    document.querySelectorAll('[data-stepper] li').forEach((li, k) => { li.classList.toggle('done', k < i); li.classList.toggle('current', k === i); });
     backBtn.hidden = i === 0;
     actions.hidden = step === 'horario';
     nextBtn.firstChild.textContent = step === 'contacto' ? 'Ver horarios disponibles ' : 'Continuar ';

@@ -108,12 +108,31 @@
     renderLogin();
   }
 
+  // Esqueleto con la forma de cada vista mientras llegan los datos.
+  function skeletonFor(view) {
+    const sk = (cls, style) => el('span', { class: `sk-block ${cls || ''}`, style, 'aria-hidden': 'true' });
+    const lines = (n) => Array.from({ length: n }, (_, i) => sk('sk-line', `width:${90 - (i % 3) * 15}%`));
+    const card = (n) => el('div', { class: 'adm-card' }, sk('sk-line', 'width:35%;height:18px'), ...lines(n));
+    const head = el('div', { class: 'adm-head' }, sk('sk-title'));
+    const label = el('span', { class: 'sr-only' }, 'Cargando…');
+    if (view === 'resumen' || !view) {
+      return el('div', { class: 'adm-sk' }, label, head,
+        el('div', { class: 'adm-kpis' }, ...Array.from({ length: 5 }, () => el('div', { class: 'adm-kpi' }, sk('sk-line', 'width:60%'), sk('', 'height:34px;width:45%'), sk('sk-line', 'width:70%')))),
+        el('div', { class: 'adm-grid2', style: 'margin-top:28px' }, card(9), card(5)));
+    }
+    if (view === 'prospectos') {
+      return el('div', { class: 'adm-sk' }, label, head, sk('', 'height:46px;margin-bottom:14px'),
+        el('div', { class: 'adm-card' }, ...Array.from({ length: 8 }, () => el('div', { class: 'adm-sk-row' }, sk('sk-line'), sk('sk-line'), sk('sk-line'), sk('sk-line')))));
+    }
+    return el('div', { class: 'adm-sk' }, label, head, card(4), card(6));
+  }
+
   function route() {
     if (!token || !main) return;
     const view = (location.hash.slice(1).split('/')[0]) || 'resumen';
     app.querySelectorAll('.adm-nav a').forEach((a) => { if (a.dataset.view === view) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
     const fn = { resumen: viewMetrics, prospectos: viewLeads, agenda: viewAgenda, disponibilidad: viewAvailability, puntuacion: viewScoring }[view] || viewMetrics;
-    put(el('p', { class: 'adm-loading' }, 'Cargando…'));
+    put(skeletonFor(view));
     fn().catch((err) => put(el('p', { class: 'adm-error' }, err.message)));
   }
   window.addEventListener('hashchange', route);
@@ -133,7 +152,7 @@
       const drop = prev ? Math.round((1 - f.sessions / prev) * 100) : null;
       return el('li', {},
         el('span', { class: 'adm-funnel-l' }, FUNNEL_LABELS[f.key] || f.key),
-        el('span', { class: 'adm-funnel-bar' }, el('i', { style: `width:${(f.sessions / max) * 100}%` })),
+        el('span', { class: 'adm-funnel-bar' }, el('i', { style: 'width:0', 'data-w': `${(f.sessions / max) * 100}%` })),
         el('b', {}, f.sessions),
         el('small', {}, drop != null && prev ? (drop > 0 ? `−${drop}%` : '0%') : ''));
     }));
@@ -158,6 +177,15 @@
               el('thead', {}, el('tr', {}, el('th', {}, 'Variante'), el('th', {}, 'Visitas'), el('th', {}, 'Formulario'), el('th', {}, 'Datos'), el('th', {}, 'Reservas'))),
               el('tbody', {}, ...m.variants.map((v) => el('tr', {}, el('td', {}, v.variant), el('td', {}, v.visits), el('td', {}, v.starts), el('td', {}, v.leads), el('td', {}, `${v.bookings}${v.visits ? ` (${Math.round((v.bookings / v.visits) * 1000) / 10}%)` : ''}`)))))
               : el('p', { class: 'adm-muted' }, 'Aún no hay datos de variantes.')))));
+    animateMetrics();
+  }
+
+  // Indicadores de progreso: las barras crecen hasta su valor y las cifras cuentan hasta el dato real.
+  function animateMetrics() {
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      main.querySelectorAll('[data-w]').forEach((b) => { b.style.width = b.dataset.w; });
+      if (window.NexoFx) main.querySelectorAll('.adm-kpi b').forEach((b) => window.NexoFx.countUp(b));
+    }));
   }
 
   // ---------- Prospectos ----------

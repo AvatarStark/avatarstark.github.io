@@ -30,6 +30,7 @@ Navegador ──► Web estática (GitHub Pages o el propio servidor)
 | `book-demo/gestionar/`, `assets/js/manage.js` | Reprogramar o cancelar con el enlace secreto `#t=…` |
 | `admin/`, `assets/css/admin.css`, `assets/js/admin.js` | Panel: métricas, prospectos, agenda, disponibilidad, reglas de puntuación |
 | `assets/js/config.js` | Configuración pública (URL de la API, WhatsApp, video, Turnstile, A/B) |
+| `assets/js/fx.js` | Efectos compartidos: esqueletos de carga, onda al pulsar, animaciones al hacer scroll, tarjetas que se inclinan con el puntero, barra de lectura y cifras animadas. Respeta «reducir movimiento» |
 | `assets/js/boot.js`, `assets/js/track.js` | Variante A/B antes de pintar; analítica propia anónima |
 | `server/src/routes/public.js` | API pública: horarios, prospectos, reservas, gestión, eventos |
 | `server/src/routes/admin.js` | API del panel (sesión, prospectos, notas, historial, métricas, ajustes) |
@@ -80,7 +81,7 @@ Después, en http://localhost:8787/admin/ → Disponibilidad, define las franjas
 ```bash
 cd server
 npm test           # 23 pruebas de API y lógica contra PostgreSQL (TEST_DATABASE_URL)
-npm run test:e2e   # 34 pruebas Playwright: escritorio, móvil, accesibilidad WCAG 2.2 AA (axe)
+npm run test:e2e   # 40 pruebas Playwright: escritorio, móvil, accesibilidad WCAG 2.2 AA (axe) y efectos visuales
 ```
 
 Las pruebas borran y recrean el esquema de la base indicada en `TEST_DATABASE_URL` (por defecto `nexo_web_test` en localhost). Nunca apuntarlas a la base de producción.

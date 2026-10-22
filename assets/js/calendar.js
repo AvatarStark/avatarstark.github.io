@@ -158,7 +158,10 @@
 
     async function load() {
       root.querySelector('.cal').classList.add('is-loading');
-      status.replaceChildren(el('div', { class: 'cal-skeleton', 'aria-hidden': 'true' }, ...Array.from({ length: 6 }, () => el('i'))), el('span', { class: 'sr-only' }, 'Cargando horarios…'));
+      status.replaceChildren(el('div', { class: 'cal-sk', 'aria-hidden': 'true' },
+        el('div', { class: 'cal-sk-days' }, ...Array.from({ length: 7 }, () => el('i'))),
+        el('b'),
+        el('div', { class: 'cal-skeleton' }, ...Array.from({ length: 9 }, () => el('i')))), el('span', { class: 'sr-only' }, 'Cargando horarios…'));
       try {
         const data = await window.NexoApi.request('GET', '/api/slots');
         slots = data.slots || [];

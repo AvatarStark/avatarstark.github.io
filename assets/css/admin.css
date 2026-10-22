@@ -55,7 +55,7 @@
 .adm-funnel { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
 .adm-funnel li { display: grid; grid-template-columns: 170px 1fr 48px 52px; gap: 12px; align-items: center; font-size: 14.5px; }
 .adm-funnel-bar { height: 12px; border-radius: 6px; background: #eef2f8; overflow: hidden; }
-.adm-funnel-bar i { display: block; height: 100%; border-radius: 6px; background: var(--blue-deep); min-width: 2px; }
+.adm-funnel-bar i { display: block; height: 100%; border-radius: 6px; background: linear-gradient(90deg, var(--blue-deep), var(--blue)); min-width: 2px; transition: width .9s var(--ease); }
 .adm-funnel b { text-align: right; font-variant-numeric: tabular-nums; }
 .adm-funnel small { color: #b3203a; font-weight: 700; font-variant-numeric: tabular-nums; }
 .adm-bars { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
@@ -162,3 +162,17 @@
   .adm-dl div { grid-template-columns: 1fr; gap: 2px; }
   .adm-leads th:nth-child(2), .adm-leads td:nth-child(2), .adm-leads th:nth-child(6), .adm-leads td:nth-child(6) { display: none; }
 }
+
+/* Esqueletos y microinteracciones del panel */
+.adm-sk-row { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 18px; padding: 10px 0; border-bottom: 1px solid #eef2f8; }
+.adm-kpi { transition: transform .5s var(--ease), box-shadow .3s; }
+.adm-leads tbody tr { transition: background-color .15s, translate .2s var(--ease); }
+.adm-leads tbody tr:hover { translate: 4px 0; }
+.adm-nav a { transition: background-color .2s, color .2s, translate .2s var(--ease); }
+.adm-nav a:hover:not([aria-current]) { translate: 3px 0; }
+.adm-drawer section { animation: faqIn .4s var(--ease) both; }
+.adm-drawer section:nth-of-type(2) { animation-delay: .04s; } .adm-drawer section:nth-of-type(3) { animation-delay: .08s; }
+.adm-drawer section:nth-of-type(4) { animation-delay: .12s; } .adm-drawer section:nth-of-type(5) { animation-delay: .16s; }
+.adm-toast { animation: toastIn .35s var(--ease); }
+@keyframes toastIn { from { opacity: 0; translate: -50% 12px; } to { opacity: 1; translate: -50% 0; } }
+.adm-toast { transform: none; translate: -50% 0; }

@@ -39,7 +39,7 @@
   ]}
   </script>
 </head>
-<body>
+<body data-scroll-progress>
 <a class="skip" href="#contenido">Saltar al contenido</a>
 
 <header class="nav" id="nav">
@@ -103,11 +103,11 @@
 
   <section class="facts" aria-label="En pocas palabras">
     <div class="wrap">
-      <ul>
+      <ul data-stagger>
         <li class="reveal"><strong>CUP y USD</strong><span>Con la tasa que tú decides</span></li>
-        <li class="reveal d1"><strong>Sin Internet</strong><span>Trabaja en tu red local</span></li>
-        <li class="reveal d2"><strong>PC, tableta o móvil</strong><span>Desde el navegador</span></li>
-        <li class="reveal d3"><strong>Tus datos, en tu negocio</strong><span>Guardados en tu propia PC</span></li>
+        <li class="reveal"><strong>Sin Internet</strong><span>Trabaja en tu red local</span></li>
+        <li class="reveal"><strong>PC, tableta o móvil</strong><span>Desde el navegador</span></li>
+        <li class="reveal"><strong>Tus datos, en tu negocio</strong><span>Guardados en tu propia PC</span></li>
       </ul>
     </div>
   </section>
@@ -120,20 +120,20 @@
         <h2 class="h2 reveal d1" id="problemas-title">¿Te suena alguna de estas?</h2>
         <p class="sub reveal d2">Son los problemas que más tiempo y dinero cuestan en un negocio que cobra y lleva el almacén a mano.</p>
       </div>
-      <ul class="pains">
+      <ul class="pains" data-stagger>
         <li class="pain reveal">
           <span class="pain-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 8 12 3 3 8v8l9 5 9-5Z"/><path d="m3 8 9 5 9-5M12 13v8"/></svg></span>
           <h3>El almacén no cuadra</h3>
           <p class="pain-q">Lo que dice la libreta no coincide con lo que hay en el estante.</p>
           <p class="pain-a"><b>Con NexoPOS</b> cada venta descuenta del almacén. Entradas, merma y auditorías de inventario quedan registradas, con alertas de poco stock.</p>
         </li>
-        <li class="pain reveal d1">
+        <li class="pain reveal">
           <span class="pain-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h8M8 10h2M14 10h2M8 14h2M14 14h2M8 18h8"/></svg></span>
           <h3>Errores al cobrar</h3>
           <p class="pain-q">Precios de memoria, dos monedas y el cambio sacado con la calculadora.</p>
           <p class="pain-a"><b>Con NexoPOS</b> buscas o escaneas el producto y cobras en efectivo, transferencia, dólares o mixto, con el cambio calculado.</p>
         </li>
-        <li class="pain reveal d2">
+        <li class="pain reveal">
           <span class="pain-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="m7 15 4-4 3 3 6-6"/></svg></span>
           <h3>No sabes cuánto ganas</h3>
           <p class="pain-q">Vendes todo el día, pero la ganancia real aparece a fin de mes… si aparece.</p>
@@ -145,13 +145,13 @@
           <p class="pain-q">Cuando no estás, no sabes quién vendió qué ni cómo cerró el turno.</p>
           <p class="pain-a"><b>Con NexoPOS</b> cada persona entra con su usuario o PIN. Turnos con apertura y cierre, IPV por turno y trazabilidad de quién hizo cada cosa.</p>
         </li>
-        <li class="pain reveal d1">
+        <li class="pain reveal">
           <span class="pain-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6M9 15l2 2 4-4"/></svg></span>
           <h3>Papelitos y cuentas a mano</h3>
           <p class="pain-q">Comandas en papel, la cuenta de cada mesa en la cabeza y el cierre en la libreta.</p>
           <p class="pain-a"><b>Con NexoPOS</b> cada mesa tiene su cuenta, las comandas llegan a la tableta de cocina y el IPV del turno se actualiza solo.</p>
         </li>
-        <li class="pain pain-cta reveal d2">
+        <li class="pain pain-cta reveal">
           <h3>¿Quieres ver cómo se resuelve en tu negocio?</h3>
           <p>Te lo mostramos en una demostración con tus productos.</p>
           <a class="btn btn-dark" href="book-demo/?origen=problemas" data-cta="problemas">Solicitar demostración</a>
@@ -169,7 +169,7 @@
         <p class="sub reveal d2">Capturas reales de NexoPOS 1.5 con datos de demostración. Elige una pantalla.</p>
       </div>
 
-      <div class="tour reveal" data-tour>
+      <div class="tour reveal reveal-scale" data-tour>
         <div class="tour-tabs" role="tablist" aria-label="Pantallas de NexoPOS">
           <button class="tour-tab" type="button" role="tab" id="tt-resumen" aria-controls="tp-resumen" aria-selected="true"><span class="tour-num">01</span><span><b>Resumen y reportes</b><small>Ventas, ganancia y comparativas</small></span><i class="tour-bar"></i></button>
           <button class="tour-tab" type="button" role="tab" id="tt-caja" aria-controls="tp-caja" aria-selected="false" tabindex="-1"><span class="tour-num">02</span><span><b>Caja</b><small>Vende y cobra en segundos</small></span><i class="tour-bar"></i></button>
@@ -211,11 +211,11 @@
         <span class="kicker reveal">Cómo funciona</span>
         <h2 class="h2 reveal d1" id="como-title">Se instala en tu negocio.<br><span class="grad">Trabaja aunque no haya Internet.</span></h2>
       </div>
-      <ol class="steps">
+      <ol class="steps" data-stagger data-steps-progress>
         <li class="step reveal"><span class="step-n">1</span><h3>Instalas NexoPOS en una PC</h3><p>Un instalador para Windows 10 u 11 (64 bits) con todo incluido. En esa PC quedan el programa y tus datos.</p></li>
-        <li class="step reveal d1"><span class="step-n">2</span><h3>Configuras tu negocio</h3><p>Productos con foto y precio, categorías, la tasa del dólar, los usuarios con su PIN y los módulos que vas a usar.</p></li>
-        <li class="step reveal d2"><span class="step-n">3</span><h3>Conectas cajas y tabletas</h3><p>Los demás equipos abren NexoPOS en el navegador, por el Wi‑Fi o la red local del negocio.</p></li>
-        <li class="step reveal d3"><span class="step-n">4</span><h3>Vendes y controlas</h3><p>Cada venta descuenta del almacén. Al cerrar el turno tienes el IPV, y en Administración, tus ganancias.</p></li>
+        <li class="step reveal"><span class="step-n">2</span><h3>Configuras tu negocio</h3><p>Productos con foto y precio, categorías, la tasa del dólar, los usuarios con su PIN y los módulos que vas a usar.</p></li>
+        <li class="step reveal"><span class="step-n">3</span><h3>Conectas cajas y tabletas</h3><p>Los demás equipos abren NexoPOS en el navegador, por el Wi‑Fi o la red local del negocio.</p></li>
+        <li class="step reveal"><span class="step-n">4</span><h3>Vendes y controlas</h3><p>Cada venta descuenta del almacén. Al cerrar el turno tienes el IPV, y en Administración, tus ganancias.</p></li>
       </ol>
 
       <div class="net reveal" role="img" aria-label="La PC con NexoPOS conecta caja, tableta y teléfono por la red local; Internet no es necesario">
@@ -287,7 +287,7 @@
           <img src="assets/capturas/04-panel-admin-claro-1600.webp" srcset="assets/capturas/04-panel-admin-claro-960.webp 960w, assets/capturas/04-panel-admin-claro-1600.webp 1600w" sizes="(max-width: 980px) 90vw, 700px" width="1600" height="1000" alt="Administración de NexoPOS con el menú de módulos" loading="lazy">
         </div>
       </div>
-      <ul class="mods mods-light reveal">
+      <ul class="mods mods-light reveal" data-stagger>
         <li><b>Mesas</b><span>Una cuenta por mesa</span></li>
         <li><b>Cocina</b><span>Comandas en tableta</span></li>
         <li><b>Fregadora</b><span>Vallas, turnos y equipos</span></li>
@@ -306,7 +306,7 @@
         <h2 class="h2 reveal d1" id="demo-title">Un turno con NexoPOS,<br><span class="grad">de principio a fin.</span></h2>
         <p class="sub reveal d2">Del acceso con PIN al cierre del turno, en pantallas reales.</p>
       </div>
-      <div class="player reveal" data-player>
+      <div class="player reveal reveal-scale" data-player>
         <div class="player-frame">
           <div class="player-slides" aria-live="off">
             <figure class="player-slide is-on"><img src="assets/capturas/02-login-pin-claro-1600.webp" srcset="assets/capturas/02-login-pin-claro-960.webp 960w, assets/capturas/02-login-pin-claro-1600.webp 1600w" sizes="(max-width: 1100px) 94vw, 1040px" width="1600" height="1000" alt="" loading="lazy"><figcaption><b>1 · Entrar</b> Cada persona elige su foto y escribe su PIN.</figcaption></figure>
@@ -343,11 +343,11 @@
         <span class="kicker reveal">Confianza</span>
         <h2 class="h2 reveal d1" id="confianza-title">Tus datos se quedan<br>en tu negocio.</h2>
       </div>
-      <ul class="trust">
+      <ul class="trust" data-stagger>
         <li class="reveal"><span class="trust-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></svg></span><h3>En tu propia PC</h3><p>La base de datos se guarda en el equipo del negocio y solo atiende a ese equipo: no se publica en la red.</p></li>
-        <li class="reveal d1"><span class="trust-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/></svg></span><h3>Red local protegida</h3><p>El acceso a NexoPOS se permite solo desde redes privadas y la red local de tu negocio.</p></li>
-        <li class="reveal d2"><span class="trust-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></svg></span><h3>Actualizaciones firmadas</h3><p>NexoPOS comprueba la firma y el contenido de cada actualización antes de instalarla. Tú decides cuándo.</p></li>
-        <li class="reveal d3"><span class="trust-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg></span><h3>Copia antes de actualizar</h3><p>Antes de cambiar el programa se respaldan la base, la configuración y los archivos. Tus datos se conservan.</p></li>
+        <li class="reveal"><span class="trust-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/></svg></span><h3>Red local protegida</h3><p>El acceso a NexoPOS se permite solo desde redes privadas y la red local de tu negocio.</p></li>
+        <li class="reveal"><span class="trust-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></svg></span><h3>Actualizaciones firmadas</h3><p>NexoPOS comprueba la firma y el contenido de cada actualización antes de instalarla. Tú decides cuándo.</p></li>
+        <li class="reveal"><span class="trust-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg></span><h3>Copia antes de actualizar</h3><p>Antes de cambiar el programa se respaldan la base, la configuración y los archivos. Tus datos se conservan.</p></li>
       </ul>
     </div>
   </section>
@@ -404,7 +404,7 @@
   <!-- CTA final -->
   <section class="cta" id="contacto" aria-labelledby="cta-title">
     <div class="wrap">
-      <div class="cta-card reveal">
+      <div class="cta-card reveal reveal-scale">
         <h2 class="h2" id="cta-title">Mira NexoPOS funcionando con los productos de tu negocio.</h2>
         <p>Cinco preguntas, eliges día y hora, y te contactamos por WhatsApp a la hora acordada.</p>
         <div class="hero-cta">
@@ -435,5 +435,6 @@
 
 <script src="assets/js/track.js" defer></script>
 <script src="assets/js/main.js" defer></script>
+<script src="assets/js/fx.js" defer></script>
 </body>
 </html>
