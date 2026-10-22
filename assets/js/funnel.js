@@ -4,6 +4,10 @@
   const track = (name, data) => window.nexoTrack && window.nexoTrack(name, data);
   const { el, longLabel, tzLabel } = window.NexoCalendar;
   const STEPS = ['negocio', 'necesidades', 'equipo', 'plazo', 'contacto', 'horario'];
+  // Sin backend disponible (por ejemplo, la web en GitHub Pages antes de desplegar la API) el embudo
+  // termina en WhatsApp: 5 pasos, sin calendario y sin prometer un horario.
+  let direct = false;
+  const total = () => (direct ? STEPS.length - 1 : STEPS.length);
   const KEY = 'nexo_funnel';
   const DONE_KEY = 'nexo_funnel_done';
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -155,20 +159,39 @@
       if (on && !reduced) stepEls[s].classList.remove('enter-back', 'enter');
       if (on && !reduced) { void stepEls[s].offsetWidth; stepEls[s].classList.add(i < prevIndex ? 'enter-back' : 'enter'); }
     });
-    progressLabel.textContent = `Paso ${i + 1} de ${STEPS.length}`;
-    progressFill.style.transform = `scaleX(${(i + 1) / STEPS.length})`;
+    chrome();
     progressBar.setAttribute('aria-valuenow', String(i + 1));
     document.querySelectorAll('[data-stepper] li').forEach((li, k) => { li.classList.toggle('done', k < i); li.classList.toggle('current', k === i); });
     backBtn.hidden = i === 0;
     actions.hidden = step === 'horario';
-    nextBtn.firstChild.textContent = step === 'contacto' ? 'Ver horarios disponibles ' : 'Continuar ';
     const h = stepEls[step].querySelector('h2');
-    live.textContent = `Paso ${i + 1} de ${STEPS.length}: ${h.textContent}`;
+    live.textContent = `Paso ${i + 1} de ${total()}: ${h.textContent}`;
     if (focus) h.focus({ preventScroll: true });
     if (focus && window.innerWidth < 980) document.querySelector('.fcard').scrollIntoView({ block: 'start', behavior: reduced ? 'auto' : 'smooth' });
     track('step_view', { step });
     if (step === 'horario') startCalendar();
     if (step === 'contacto') mountTurnstile();
+  }
+
+  // Textos que dependen de si hay calendario o el embudo termina en WhatsApp.
+  function chrome() {
+    const i = STEPS.indexOf(step);
+    progressLabel.textContent = `Paso ${i + 1} de ${total()}`;
+    progressFill.style.transform = `scaleX(${(i + 1) / total()})`;
+    progressBar.setAttribute('aria-valuemax', String(total()));
+    nextBtn.firstChild.textContent = step === 'contacto' ? (direct ? 'Enviar por WhatsApp ' : 'Ver horarios disponibles ') : 'Continuar ';
+    const last = document.querySelector('[data-stepper] li:last-child');
+    if (last) last.hidden = direct;
+    stepEls.contacto.querySelector('.fhint').textContent = direct
+      ? 'Te abriremos WhatsApp con tus respuestas ya escritas para acordar el día y la hora.'
+      : 'A la hora de la demostración te escribimos por WhatsApp.';
+  }
+
+  function useDirect() {
+    if (direct) return;
+    direct = true;
+    if (step === 'horario') step = 'contacto';
+    chrome();
   }
 
   backBtn.addEventListener('click', () => {
@@ -191,7 +214,7 @@
   let busy = false;
   async function advance() {
     if (busy || !validate(step)) return;
-    if (step === 'contacto') return submitLead();
+    if (step === 'contacto') return direct ? finishDirect() : submitLead();
     track('step_complete', { step });
     go(STEPS[STEPS.indexOf(step) + 1]);
   }
@@ -224,19 +247,10 @@
       `Nombre: ${a.name || '-'}`, `Negocio: ${a.businessName || '-'} (${L.businessType[a.businessType] || '-'})`,
       `Necesito mejorar: ${(a.needs || []).map((n) => L.needs[n]).join(', ') || '-'}`,
       `Personas: ${L.employees[a.employees] || '-'}`, `Plazo: ${L.timeline[a.timeline] || '-'}`,
+      a.email ? `Correo: ${a.email}` : null,
       `Zona horaria: ${a.timezone ? tzLabel(a.timezone) : '-'}`,
-    ].join('\n');
+    ].filter(Boolean).join('\n');
     return `https://wa.me/${cfg.whatsapp || '5363715593'}?text=${encodeURIComponent(text)}`;
-  }
-
-  function showUnavailable() {
-    notice.replaceChildren(
-      el('p', {}, el('b', {}, 'No pudimos conectar con el sistema de reservas.'), ' Tus respuestas siguen guardadas en esta página. Puedes intentarlo de nuevo en unos minutos o enviárnoslas por WhatsApp y acordamos la hora contigo.'),
-      el('div', { class: 'fnotice-actions' },
-        el('a', { class: 'btn btn-green', href: whatsappFallback(), target: '_blank', rel: 'noopener', 'data-cta': 'funnel-fallback' }, 'Enviar por WhatsApp'),
-        el('button', { type: 'button', class: 'btn btn-outline', onclick: () => advance() }, 'Reintentar')));
-    notice.hidden = false;
-    notice.focus?.();
   }
 
   async function submitLead() {
@@ -270,7 +284,9 @@
         const stepOf = { businessType: 'negocio', needs: 'necesidades', employees: 'equipo', timeline: 'plazo' }[first];
         if (stepOf) { go(stepOf); showError(first, err.data.fields[first]); }
       } else if (err.network || err.unavailable) {
-        showUnavailable();
+        // La API dejó de responder: se continúa por WhatsApp sin perder las respuestas.
+        useDirect();
+        finishDirect();
       } else {
         notice.replaceChildren(el('p', {}, err.message));
         notice.hidden = false;
@@ -281,6 +297,22 @@
       nextBtn.disabled = false;
       nextBtn.classList.remove('loading');
     }
+  }
+
+  // --- Final por WhatsApp (sin backend) ---
+  function finishDirect() {
+    track('step_complete', { step: 'contacto' });
+    const box = document.querySelector('[data-direct]');
+    const first = (state.answers.name || '').split(' ')[0];
+    box.querySelector('h2').textContent = `Último paso, ${first}: envíanos tus respuestas por WhatsApp.`;
+    box.querySelector('[data-direct-link]').href = whatsappFallback();
+    document.querySelector('[data-progress]').hidden = true;
+    form.hidden = true;
+    box.hidden = false;
+    box.querySelector('h2').focus({ preventScroll: true });
+    window.scrollTo({ top: 0, behavior: reduced ? 'auto' : 'smooth' });
+    const edit = box.querySelector('[data-direct-edit]');
+    edit.onclick = () => { box.hidden = true; form.hidden = false; document.querySelector('[data-progress]').hidden = false; go('contacto'); };
   }
 
   // --- Calendario ---
@@ -388,4 +420,5 @@
     if (!sessionStorage.getItem('nexo_funnel_started')) { sessionStorage.setItem('nexo_funnel_started', '1'); track('funnel_start'); }
   } catch { track('funnel_start'); }
   go(step, { focus: false });
+  window.NexoApi.request('GET', '/api/health').catch((err) => { if (err.network || err.unavailable || err.status === 404) useDirect(); });
 })();

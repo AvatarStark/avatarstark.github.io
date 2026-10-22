@@ -170,7 +170,7 @@ test('estado de carga y error del calendario', async ({ page }) => {
   await expect(page.locator('.cal-time').first()).toBeVisible();
 });
 
-test('si la API no responde, ofrece WhatsApp sin perder respuestas', async ({ page }) => {
+test('si la API falla al enviar, termina por WhatsApp sin perder respuestas', async ({ page }) => {
   await page.route('**/api/leads', (route) => route.fulfill({ status: 503, contentType: 'text/html', body: '<h1>caído</h1>' }));
   await page.goto('/book-demo/');
   await page.getByText('Cafetería, restaurante o bar').click();
@@ -183,8 +183,39 @@ test('si la API no responde, ofrece WhatsApp sin perder respuestas', async ({ pa
   await page.getByLabel('WhatsApp', { exact: true }).fill('+5352223333');
   await page.getByRole('checkbox', { name: /Acepto que NexoPOS/ }).check();
   await page.getByRole('button', { name: /Ver horarios disponibles/ }).click();
-  await expect(page.getByText('No pudimos conectar con el sistema de reservas.')).toBeVisible();
-  const wa = page.getByRole('link', { name: 'Enviar por WhatsApp' });
-  await expect(wa).toHaveAttribute('href', /wa\.me\/5363715593\?text=.*Bar%20Luis/);
+  await expect(page.getByRole('heading', { name: /Último paso, Luis/ })).toBeVisible();
+  await expect(page.getByText(/No pudimos|error/i)).toHaveCount(0);
+  await expect(page.getByRole('link', { name: 'Enviar por WhatsApp' })).toHaveAttribute('href', /wa\.me\/5363715593\?text=.*Bar%20Luis/);
+  await page.getByRole('button', { name: 'Corregir mis datos' }).click();
   await expect(page.getByLabel('Tu nombre')).toHaveValue('Luis');
+  await expect(page.getByRole('button', { name: /Enviar por WhatsApp/ })).toBeVisible();
+});
+
+test('sin backend (GitHub Pages): 5 pasos que terminan en WhatsApp', async ({ page, consoleErrors }) => {
+  await page.route('**/api/**', (route) => route.fulfill({ status: 404, contentType: 'text/html', body: '<h1>404</h1>' }));
+  let posted = false;
+  page.on('request', (r) => { if (r.method() === 'POST' && r.url().includes('/api/leads')) posted = true; });
+  await page.goto('/book-demo/');
+  await expect(page.getByText('Paso 1 de 5', { exact: true })).toBeVisible();
+  await expect(page.locator('[data-stepper] li').last()).toBeHidden();
+  await page.getByText('Tienda, mini o bodega').click();
+  await page.getByText('Reportes').click();
+  await page.getByRole('button', { name: /Continuar/ }).click();
+  await page.getByText('6 a 15').click();
+  await page.getByText('Inmediatamente').click();
+  await expect(page.getByText('Paso 5 de 5', { exact: true })).toBeVisible();
+  await expect(page.getByText(/Te abriremos WhatsApp con tus respuestas/)).toBeVisible();
+  await page.getByLabel('Tu nombre').fill('Rosa');
+  await page.getByLabel('Nombre del negocio').fill('Bodega Rosa');
+  await page.getByLabel('WhatsApp', { exact: true }).fill('+5354445555');
+  await page.getByLabel(/Correo electrónico/).fill('rosa@example.com');
+  await page.getByRole('checkbox', { name: /Acepto que NexoPOS/ }).check();
+  await page.getByRole('button', { name: /Enviar por WhatsApp/ }).click();
+  await expect(page.getByRole('heading', { name: /Último paso, Rosa/ })).toBeVisible();
+  const href = decodeURIComponent(await page.getByRole('link', { name: 'Enviar por WhatsApp' }).getAttribute('href'));
+  expect(href).toContain('Negocio: Bodega Rosa (Tienda, mini o bodega)');
+  expect(href).toContain('Necesito mejorar: reportes');
+  expect(href).toContain('Correo: rosa@example.com');
+  expect(posted).toBe(false);
+  expect(consoleErrors).toEqual([]);
 });

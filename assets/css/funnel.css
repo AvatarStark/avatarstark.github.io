@@ -245,3 +245,7 @@
 .cal-sk > b { display: block; height: 18px; width: 45%; margin-top: 22px; border-radius: 8px; }
 .cal-sk i, .cal-sk > b { background: linear-gradient(100deg, #eef2f8 30%, #f7f9fc 50%, #eef2f8 70%) 0 0 / 200% 100%; animation: shimmer-x 1.2s linear infinite; }
 .cal-skeleton { grid-template-columns: repeat(auto-fill, minmax(112px, 1fr)); }
+
+.fdone-wa { background: #25d366; color: var(--white); }
+.fdone-wa svg { width: 34px; height: 34px; }
+.fdone .fhint { margin-top: 10px; }
